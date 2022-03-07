@@ -1,4 +1,4 @@
-## Introduction to pandas for markeing
+## Introduction to pandas for marketing
 
 ### 1. Introduction to pandas for marketing
 
