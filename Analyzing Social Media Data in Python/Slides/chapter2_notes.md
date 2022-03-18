@@ -57,3 +57,71 @@ However, a single tweet contains multiple places where relevant keywords can app
 ### 6. Let's practice!
 
 Now it's your turn to count keywords in some Twitter data. 
+
+## Time Series
+
+### 1. Time series
+
+Now you know how to check how many tweets mention a word or phrase in a Twitter dataset. We're going to build on this by illustrating how mentions of keywords change over time.
+
+### 2. Time series data
+
+Tweets about companies, products, and political issues vary by the day, hour, minute, and even to the second. We want to be able to capture that variation over time. When data is tagged with a date and time, this is known as "time series" or "over time" data. The structure of time series data typically contains a date or datetime, and some type of numerical measure. In the data frame above, we have a datetime, a count of mentions of a political candidate in time period, and the name of that political candidate.
+
+### 3. Converting datetimes
+
+We can convert the date information from a string to a `datetime` type. Pandas is smart enough to convert the Twitter format for the date -- stored in `created_at` -- to a datetime type with the `to_datetime` method. Next, we set the index of the DataFrame to the `created_at` column using the `set_index` method. This allows us to access a number of useful time series methods.
+
+### 4. Keywords as time series metrics
+
+Now that we have our data frame in a time series format, we need to produce a metric which can be graphed over time. Our function `check_word_in_tweet` returns a boolean Series which indicates which rows contain our keyword and which do not. Remember that the boolean value True is the same as the numerical value one. Therefore, we can produce a column for each keyword we're interested in and understand its prevalence over time. If we sum up this column, we get an overall count of how many times that keyword appears.
+
+### 5. Generating keyword means
+
+Now that we have a metric, we can now begin plotting the keyword over time. We first generate a summary statistic over the metric we're interested in. We can use Series method `resample` for this purpose. `resample` allows us to summarize over a time window of our choice and apply a function to it. We'll use `resample` with the `mean` method to generate averages over one-minute windows. The averages are measured as a proportion of all the tweets within the window.
+
+### 6. Plotting keyword means
+
+Lastly, we'll plot those keyword means over time. We import `matplotlib.pyplot`, then we use `plt.plot` to create the plot. On the x-axis, we'll use the minute index and on the y-axis, we'll use the generated mean. We'll color Facebook blue and Google green. In this dataset, we see that mentions of Facebook seem generally higher over time compared to mentions of Google.
+
+### 7. Let's practice!
+
+Now it's your turn. In the following exercises, you'll be plotting keyword prevalence across time. 
+
+## Sentiment analysis
+
+### 1. Sentiment analysis
+
+Excellent! You've been able to detect the presence of words in tweets and plot their relative prevalence across time. This is a small step in the direction of understanding meaning in text. In this lesson, we're going to focus on a method for deriving meaning from text called sentiment analysis.
+
+### 2. Understanding sentiment analysis
+
+Sentiment analysis is a type of natural language processing method which determines whether a word, sentence, paragraph, or document is positive or negative. The idea behind sentiment analysis is that we count the words which are positive and negative as a proportion of the words in the rest of the document. Each document then gets a positive and negative score. Sentiment analysis can be useful in gauging reactions to a company, product, politician, or policy.
+
+### 3. Sentiment analysis tools
+
+We'll use the VADER SentimentIntensityAnalyzer included with the Natural Language Toolkit or `nltk`. The VADER toolkit handles short text documents like tweets very well because it measures sentiment not only with particular words, but also for emoji and different types of capitalization. For instance, there's a qualitative difference in 'Nice' in lowercase letters versus 'NICE' in all caps.
+
+### 4. Implementing sentiment analysis
+
+To use VADER, we first import it from `nltk`. Next, we instantiate a SentimentIntensityAnalyzer. Lastly, we can generate sentiment scores with the polarity_scores function and the Series method, `apply`.
+
+### 5. Interpreting sentiment scores
+
+A critical part of any type of natural language processing involves reading the text and assessing whether the method makes sense compared to a human reading. If we're attempting to replicate meaning with computational methods, then we have to make sure that meaning has face validity. Face validity means that the metric matches the concept we're trying to measure. In this case, we want to be sure the sentiment score matches our idea of what it means for a tweet to be positive or negative.
+
+### 6. Interpreting sentiment scores
+
+Here, we have two examples -- a positive tweet and a negative tweet. Each sentiment score from the VADER analyzer provides four values: negative, neutral, positive, and compound. Positive and negative are self-explanatory, while neutral measures words that don't contribute to the sentiment. Compound, however, is a combination of the positive and the negative; it's an overall assessment which ranges between negative 1 and positive 1. Below 0 is negative, and above 0 is positive. The first tweet presented here reads to human eyes as positive and the compound score is rather high -- about 0.9. The second tweet reads as negative but the compound score is only slightly below zero, around -0.07.
+
+### 7. Generating sentiment averages
+
+We generate sentiment averages over time in the same way we generate average prevalence measures. We'll extract only the 'compound' field from the sentiment scores. Next, we'll separate sentiments for each company with our `check_word_in_tweet` function. Lastly, we'll generate an average value for our time window of one minute.
+
+### 8. Plotting sentiment scores
+
+We can plot sentiment scores in the same way we plotted the prevalence of keywords. We'll set the x-axis to time, and the y-axis to our sentiment score. This plot indicates that sentiment towards Google is slightly higher than that of Facebook over time. This is despite Facebook being mentioned more, which we saw in the last lesson. This underlines the importance of extracting meaning from text, not just performing keyword counts.
+
+### 9. Let's practice!
+
+Now that you know what sentiment analysis is, let's revisit the data science hashtag dataset and analyze the sentiment of those tweets. 
